@@ -39,7 +39,7 @@ $WidthDistance = 0;
 $HeightDistance = 0;
 
 
-$api_key = "AIzaSyB7CEF_GrN1ltrpDYr_zdYqtWBkIDPuDFk";
+$api_key = "YOUR API KEY";
 
 if ($var_club > 0 ){
 	if ($var_club == 1) {
