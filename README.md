@@ -4,7 +4,7 @@
 
 ------------------------------------------------------------------
 
-Mapgen: https://www.hobby4life.nl/mapgen
+Mapgen: https://hobby4life.nl/mapgen
 
 
 Change the API key in process.php to your own API Key for your website.
