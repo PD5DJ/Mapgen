@@ -8,20 +8,20 @@
 }
 
 
-body {
-	color: #000000;
-	font-family: "Serene W90 Regular";
-	text-rendering: optimizeLegibility;	
-	background: url(/mapgen/images/background.jpg) no-repeat top center fixed;
-	width: 100%;
-	height: 100%;
-	min-width: 100%;
-	min-height: 100%;
-		
-	-webkit-background-size: 100% 100%;
-	-moz-background-size: 100% 100%;
-	-o-background-size: 100% 100%;
-	background-size: 100% 100%;
+	body {
+		color: #000000;
+		font-family: "Serene W90 Regular";
+		text-rendering: optimizeLegibility;	
+		background: url(/mapgen/images/background.jpg) no-repeat top center fixed;
+		width: 100%;
+		height: 100%;
+		min-width: 100%;
+		min-height: 100%;
+			
+		-webkit-background-size: 100% 100%;
+		-moz-background-size: 100% 100%;
+		-o-background-size: 100% 100%;
+		background-size: 100% 100%;
 	}
 	
 
@@ -66,11 +66,47 @@ body {
 		vertical-align:center;
 		padding:0px 0px;			
 	}	
+
+	.submit-zoom {
+		width: 80px;
+		height: 40px;
+	}
+	
+	.submit-go-button {
+		width: 150px;
+		height: 60px;
+		font-family: "Serene W90 Regular";
+		font-size:22px;
+	}
+	
+	.submit-update-button {
+		width: 80px;
+		height: 50px;
+	}	
+	
+	.submit-reset-button {
+		width: 150px;
+		height: 50px;
+	}
+
+	.select-map-number {
+		width: 50px;
+		height: 30px;
+		font-family: "Serene W90 Regular";
+		font-size:22px;		
+	}	
  
-	#map { 
-        height: 272px;    
-        width: 480px;            
-    }
+	.GPSMap {
+		position: relative;
+		width: 480px;
+		height: 272px;
+		border-width: 15px;
+		border-style: inset;
+		border-color: #656565;
+		text-align: center;
+		vertical-align: center;
+		padding: 0px;
+	}	
 
 
 	.mapimg		{
@@ -95,14 +131,65 @@ body {
 
 	}
 	
-	.leftcol {
+	.center_column {
+		table-layout: auto;
 		text-align:left;
 		vertical-align:center;		
 	}
 	
-	.rightcol {
-		width: 45%;
+	.left_column {
+		table-layout: auto;
 		text-align:right;
 		vertical-align:center;	
 		padding:0px 0px;
+	}
+	
+	.right_column {
+		table-layout: auto;
+		text-align:left;
+		vertical-align:center;		
+	}
+
+	.processed_column {
+		font-size: 16px;
+		font-family: Lucida Console;
+		font-weight: normal;
+		table-layout: auto;
+		text-align:center;
+		vertical-align:center;	
+	}
+	
+	* {box-sizing: border-box}
+
+	/* Container needed to position the overlay. Adjust the width as needed */
+	.container {
+	  position: relative;
+	}
+
+	/* Make the image to responsive */
+	.image {
+	  display: block;
+	  width: 100%;
+	  height: auto;
+	}
+
+	/* The overlay effect - lays on top of the container and over the image */
+	.overlay {
+	  position: absolute;
+	  bottom: 0;
+	  background: rgb(0, 0, 0);
+	  background: rgba(0, 0, 0, 0.5); /* Black see-through */
+	  color: #f1f1f1;
+	  width: 100%;
+	  transition: .5s ease;
+	  opacity:0;
+	  color: white;
+	  font-size: 20px;
+	  padding: 20px;
+	  text-align: center;
+	}
+
+	/* When you mouse over the container, fade in the overlay title */
+	.container:hover .overlay {
+	  opacity: 1;
 	}

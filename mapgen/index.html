@@ -1,10 +1,196 @@
 <!DOCTYPE html>
 <html>
+	<head>
+	    <meta charset="utf-8" />
+
+		<!-- Reference to the Bing Maps SDK -->
+		<script type='text/javascript'
+				src='https://www.bing.com/api/maps/mapcontrol?callback=GetMap&key=YOUR-API-KEY' 
+				async defer>
+		</script>
+		
+		<script type='text/javascript'>
+		var map;
+		var lastZoomLevel = 0;
+		var init_lat = 52.73259;
+		var init_long = 5.27535;
+		var loc;
+		var map_id;
+		var pushpins = [0,0,0,0,0,0,0,0];
+		var pushpins_pin = 0;
+		
+		
+		
+		
+		
+		function GetMap()
+		{
+			map = new Microsoft.Maps.Map('#BingMap', {
+				
+				center: new Microsoft.Maps.Location(init_lat, init_long),
+				supportedMapTypes: [Microsoft.Maps.MapTypeId.aerial, Microsoft.Maps.MapTypeId.road, Microsoft.Maps.MapTypeId.grayscale, Microsoft.Maps.MapTypeId.canvasLight, Microsoft.Maps.MapTypeId.canvasDark],
+				mapTypeId: Microsoft.Maps.MapTypeId.aerial,
+				showMapTypeSelector:false,
+				zoom: 17
+			});
+			UpdateMapInfo();
+			Microsoft.Maps.Events.addHandler(map, 'viewchange', displayMouseDragInfo);
+			Microsoft.Maps.Events.addHandler(map, 'mousemove', displayMouseOverInfo);
+			Microsoft.Maps.Events.addHandler(map, 'dblclick', CenterMap);
+			
+
+		}
+
+		function SetMapType(option_text){
+			var text = option_text.options[option_text.selectedIndex].text;
+			if (text == "Aerial") {
+				map.setView({mapTypeId: Microsoft.Maps.MapTypeId.aerial});
+			} else if (text == "Road") {
+				map.setView({mapTypeId: Microsoft.Maps.MapTypeId.road});
+			} else if (text == "Canvas Light") {
+				map.setView({mapTypeId: Microsoft.Maps.MapTypeId.canvasLight});
+			} else if (text == "Canvas Dark") {
+				map.setView({mapTypeId: Microsoft.Maps.MapTypeId.canvasDark});
+			} else if (text == "Grayscale") {	
+				map.setView({mapTypeId: Microsoft.Maps.MapTypeId.grayscale});
+			}
+			
+			UpdateMapInfo();
+		}
+
+		
+		function displayMouseDragInfo(e) {
+			var coordinates = map.getCenter();
+			document.getElementById('id_lat').value = coordinates.latitude.toFixed(6);	
+			document.getElementById('id_long').value = coordinates.longitude.toFixed(6);
+			UpdateMapInfo();
+		}
+
+		function UpdateMapInfo(e) {
+			map_id = map.getMapTypeId();
+			if (map_id == "a") {
+				map_type = "Aerial";
+			} else if (map_id == "r") {
+				map_type = "Road";
+			} else if (map_id == "cg") {
+				map_type = "Grayscale";
+			} else if (map_id == "wl") {
+				map_type = "Canvas Light";	
+			} else if (map_id == "wd") {
+				map_type = "Canvas Dark";					
+			} else {
+				map_type = map_id;
+			}
+			document.getElementById('map_type').innerHTML = map_type;		
+			lastZoomLevel = map.getZoom();
+			document.getElementById('id_zoom').innerHTML = lastZoomLevel.toFixed(0);		
+		}
+
+		function displayMouseOverInfo(e) {
+			if (e.targetType == "map") {
+				var point = new Microsoft.Maps.Point(e.getX(), e.getY());
+				loc = e.target.tryPixelToLocation(point);
+				document.getElementById("latmoved").innerHTML = loc.latitude.toFixed(6);
+				document.getElementById("longmoved").innerHTML = loc.longitude.toFixed(6);
+			}
+		}
+			
+		function CenterMap(e) {
+			map.setView({
+				mapTypeId: Microsoft.Maps.MapTypeId.aerial,
+				center: new Microsoft.Maps.Location(loc.latitude, loc.longitude)
+			});	
+		}
+
+		function UpdateMap() {
+			map.setView({center: new Microsoft.Maps.Location(document.getElementById("id_lat").value, document.getElementById("id_long").value)});
+		}	
+		
+		function ResetAll() {
+			document.getElementById("frm1").reset();
+		}	
+		
+		
+		function inc_zoom(){
+			if ( document.getElementById("zoomlevel1").value < 20) {
+				var i = document.getElementById("zoomlevel1").value
+				document.getElementById("zoomlevel1").value = ++i
+				i = document.getElementById("zoomlevel2").value
+				document.getElementById("zoomlevel2").value = ++i
+				i = document.getElementById("zoomlevel3").value
+				document.getElementById("zoomlevel3").value = ++i
+				i = document.getElementById("zoomlevel4").value
+				document.getElementById("zoomlevel4").value = ++i
+				i = document.getElementById("zoomlevel5").value
+				document.getElementById("zoomlevel5").value = ++i
+			}
+		}
+		
+		function dec_zoom(){
+			if ( document.getElementById("zoomlevel5").value > 1) {
+				document.getElementById("zoomlevel1").value = document.getElementById("zoomlevel1").value - 1
+				document.getElementById("zoomlevel2").value = document.getElementById("zoomlevel2").value - 1
+				document.getElementById("zoomlevel3").value = document.getElementById("zoomlevel3").value - 1
+				document.getElementById("zoomlevel4").value = document.getElementById("zoomlevel4").value - 1
+				document.getElementById("zoomlevel5").value = document.getElementById("zoomlevel5").value - 1
+			}
+		}
+
+		function on() {
+		  document.getElementById("overlay").style.display = "block";
+		}
+		
+		function Club_select(x) {
+			var selectedText = x.options[x.selectedIndex].innerHTML;
+			var selectedValue = x.value;
+			var club_lat ;
+			var club_long ;
+			
+			if (selectedValue == 1) {
+				club_lat = 52.732541;
+				club_long = 5.275353;
+			} else if (selectedValue == 2) {
+				club_lat = 52.770698;
+				club_long = 5.080489;
+			} else if (selectedValue == 3) {
+				club_lat = 52.480703;
+				club_long = 5.038304;
+			} else if (selectedValue == 4) {
+				club_lat = 52.880541;
+				club_long = 4.975113;
+			} else if (selectedValue == 5) {
+				club_lat = 52.9183;
+				club_long = 4.78194;
+			} else if (selectedValue == 6) {
+				club_lat = 52.601232;
+				club_long = 4.775400;
+			} else if (selectedValue == 7) {
+				club_lat = 52.591457;
+				club_long = 4.767891;
+			} else if (selectedValue == 8) {
+				club_lat = 52.5886;
+				club_long = 4.73139;
+			}	
+			document.getElementById("id_lat").value = club_lat;
+			document.getElementById("id_long").value = club_long;
+			UpdateMap();
+			
+		}
+		
+
+		</script>	
+ 
+	</head>
+	
+	
 	<title>Map Generator for OpenTX GPS Map Widget</title>
 	<link rel="stylesheet" type="text/css" href="/mapgen/styles.css">
 	<body>
+	
+
+	
 		<center>
-		<a href="/"><img src="/mapgen/images/h4l_small.png"></a>
+		<a href="/"><img src="images/h4l_small.png"></a>
 		<h1>Map Generator for OpenTX GPS Map Widget</h1>
 		<table>
 			<tr>
@@ -17,97 +203,121 @@
 		OpenTX Lua Widget project: <a href="https://github.com/Hobby4life/GPSMap" target="_blank">https://github.com/Hobby4life/GPSMap</a><br><br>
 		<font size="2">Copyright Hobby4Life 2019</b></font><br><br>
 		<form id="frm1" action="/mapgen/process.php">
-			
+
 			<table>
 				<tr>
-					<td colspan="2">
-						<h1>Method 1</h1>
-						<b>Scroll to a position on the map</b>
-					</td>
+					<td colspan="3"><br><b>Scroll/drag to a position on the map</b></td>
+				<tr>
+					<td colspan="3"><b>Double click to center map at cursor position</b></td>
+				</tr>
 				</tr>
 				<tr>
-					<td colspan="2">
+					<td colspan="3">
 						<br>
 						<i>Center of the map will be used.<br>
 						Map view gives indication of view in OpenTX.</i>
 					</td>
 				</tr>				
 				<tr>
-					<td colspan="2">
-						<center><div id="map" class="mapimg"></div></center>
-					</td>
-				</tr>
-				<tr>
-					<td class="rightcol">Current Zoomlevel:</td>
-					<td class="leftcol"><b><div id="id_zoom">14</div></b></td>
-				</tr>
-				<tr>
-					<td class="rightcol">Pointer Lattitude:</td>
-					<td class="leftcol"><b><div id="latmoved">52.732541</div></b></td>
-				</tr>
-				<tr>
-					<td class="rightcol">Pointer Longitude:<b></td>
-					<td class="leftcol"><b><div id="longmoved">5.275353</div></b></td>
-				</tr>
-<!--			
-				<tr>
-					<td colspan="3"><b>Select a dutch club from below:<b></td>
-				</tr>
-				<tr>
 					<td colspan="3">
-					<input type="button" onclick="disable()" value="Disable list">
-						<input type="button" onclick="enable()" value="Enable list">
-						<select id="ClubSelect" name="var_club" >
-							<option value="0">--Custom--</option>
-							<option value="1">MVC Pegasus</option>
-							<option value="2">MVC Wieringen</option>
-							<option value="3">MVC Crash</option>
-							<option value="4">Aeroclub Kennemerland</option>
-						<select>						
-					</td>
-				</tr>
--->
-				<tr>
-					<td colspan="2"><hr></td>
-				</tr>
-
-				<tr>
-					<td colspan="2">
-						<h1>Method 2</h1>
-						<b>Enter center of map manually in decimal coordinates</b>
+					<center>
+						<div id="BingMap" class="GPSMap"></div> 
+						</center>
 					</td>
 				</tr>
 
 				<tr>
-					<td colspan="2"><br></td>
+					<td class="left_column">Current Zoomlevel:</td>
+					<td class="center_column"><b><div id="id_zoom"></div></b></td>
+					<td class="right_column"><b><center>Select Map Type<center></b></td>
+				</tr>
+				<tr>
+					<td class="left_column">Current Map Type:</td>
+					<td class="center_column"><b><div id="map_type"></div></b></td>
+					<td rowspan="3" class="right_column">
+							<center>
+							<select name="var_maptype" size="5" onChange="SetMapType(this);">
+								<option selected="1" value="1">Aerial</option>
+								<option value="2">Road</option>
+								<option value="3">Canvas Dark</option>
+								<option value="4">Canvas Light</option>
+								<option value="5">Grayscale</option>
+							</select>	
+							</center>
+					</td>
 				</tr>				
-
 				<tr>
-					<td class="rightcol">Lattitude:</td>
-					<td class="leftcol"><input type="text" id="id_lat" name="var_lat" value="52.732541"></td>
+					<td class="left_column">Lattitude at Mouse position:</td>
+					<td class="center_column"><b><div id="latmoved" name="var_lat">52.732541</div></b></td>
+				</tr>
+				<tr>
+					<td class="left_column">Longitude at Mouse position:<b></td>
+					<td class="center_column"><b><div id="longmoved" name="var_long">5.275353</div></b></td>
 				</tr>
 
 				<tr>
-					<td class="rightcol">Longitude:</td>
-					<td class="leftcol"><input type="text" id="id_long" name="var_long" value="5.275353"></td>
+					<td colspan="3"><b>Experimental club selection (Dutch only)</b></td>
+				</tr>	
+
+				<tr>
+					<td class="left_column">Dutch Airfields:</td>
+					<td class="center_column">
+						<select id="id_club" onchange="Club_select(this)" name="club_id">
+							<option value="1">MVC Pegasus - Enkhuizen</option>
+							<option value="2">MVC Beaufort 7 - Medemblik</option>
+							<option value="3">MVC Crash - Katwoude</option>
+							<option value="4">MVC Wieringermeer</option>
+							<option value="5">Helderse modelvliegclub</option>
+							<option value="6">Aeroclub kennemerland</option>
+							<option value="7">E-Heli vereniging Alkmaar</option>
+							<option value="8">Radio vliegclub Heilo</option>
+						</select>
+					</td>
+				</tr>
+
+
+				<tr>
+					<td colspan="3"><hr></td>
+				</tr>	
+
+				
+				<tr>
+					<td colspan="3"><b>You can also enter center of map manually in decimal coordinates</b></td>
 				</tr>
 
 				<tr>
-					<td colspan="2" align="center"><br><button type="button" onclick="UpdateMap()">Show on map</button></td>					
+					<td class="left_column">Lattitude:</td>
+					<td class="center_column"><input type="text" id="id_lat" name="var_lat" value="52.732541"></td>
 				</tr>
 
 				<tr>
-					<td colspan="2"><hr></td>
+					<td class="left_column">Longitude:</td>
+					<td class="center_column"><input type="text" id="id_long" name="var_long" value="5.275353"></td>
+				</tr>
+
+				<tr>
+					<td colspan="3" align="center"><br><button type="button" onclick="UpdateMap()" class="submit-update-button">Update map</button></td>					
+				</tr>
+
+				<tr>
+					<td colspan="3"><hr></td>
+				</tr>	
+
+				<tr>
+					<td colspan="3"><center><h1>Select Map zoom</h1></center></td>
+				</tr>
+				
+				<tr>
+					<td colspan="3"><center><b>Adjust global zoom size:</b></center></td>
 				</tr>				
+				<tr>
+					<td colspan="3"><input type="button" onclick="inc_zoom()" value="Zoom +" class="submit-zoom">     <input type="button" onclick="dec_zoom()" value="Zoom -" class="submit-zoom"><br><br></td>
+				</tr>					
 
 				<tr>
-					<td colspan="2"><center><b>Select Map zoom size:</b></center><br></td>
-				</tr>
-
-				<tr>
-					<td class="rightcol">Zoomlevel 1:</td>
-					<td class="leftcol">
-							<select name="var_zoomlevel_1">
+					<td class="left_column">Zoomlevel 1:</td>
+					<td class="center_column">
+							<select name="var_zoomlevel_1" id="zoomlevel1">
 								<option value="1">1</option>
 								<option value="2">2</option>
 								<option value="3">3</option>
@@ -133,9 +343,9 @@
 				</tr>
 
 				<tr>
-					<td class="rightcol">Zoomlevel 2:</td>
-					<td class="leftcol">
-							<select name="var_zoomlevel_2" >
+					<td class="left_column">Zoomlevel 2:</td>
+					<td class="center_column">
+							<select name="var_zoomlevel_2" id="zoomlevel2">
 								<option value="1">1</option>
 								<option value="2">2</option>
 								<option value="3">3</option>
@@ -161,9 +371,9 @@
 				</tr>
 
 				<tr>
-					<td class="rightcol">Zoomlevel 3:</td>
-					<td class="leftcol">
-							<select name="var_zoomlevel_3" >
+					<td class="left_column">Zoomlevel 3:</td>
+					<td class="center_column">
+							<select name="var_zoomlevel_3" id="zoomlevel3">
 								<option value="1">1</option>
 								<option value="2">2</option>
 								<option value="3">3</option>
@@ -189,9 +399,9 @@
 				</tr>
 
 				<tr>
-					<td class="rightcol">Zoomlevel 4:</td>
-					<td class="leftcol">
-							<select name="var_zoomlevel_4" >
+					<td class="left_column">Zoomlevel 4:</td>
+					<td class="center_column">
+							<select name="var_zoomlevel_4" id="zoomlevel4">
 								<option value="1">1</option>
 								<option value="2">2</option>
 								<option value="3">3</option>
@@ -217,9 +427,9 @@
 				</tr>
 
 				<tr>
-					<td class="rightcol">Zoomlevel 5:</td>
-					<td class="leftcol">
-							<select name="var_zoomlevel_5" >
+					<td class="left_column">Zoomlevel 5:</td>
+					<td class="center_column">
+							<select name="var_zoomlevel_5"id="zoomlevel5">
 								<option value="1">1</option>
 								<option value="2">2</option>
 								<option value="3">3</option>
@@ -245,17 +455,34 @@
 				</tr>
 
 				<tr>
-					<td colspan="2"><br><input type="button" onclick="ResetAll()" value="Reset to default values"><br><br></td>
+					<td colspan="3"><br><input type="button" onclick="ResetAll()" value="Reset to default values" class="submit-reset-button"><br><br></td>
+				</tr>				
+
+				
+				<tr>
+					<td colspan="3"><hr></td>
 				</tr>				
 
 				<tr>
-					<td colspan="2"><hr></td>
-				</tr>
-
-				<tr>
-					<td colspan="2">
-						<h1>Create the maps!</h1>
-						<input type="submit" class="Submit-button" value="Generate Maps"><br><br>
+					<td colspan="3">
+						<b><h1>Select map number to generate</h1></b>
+						<select name="var_mapnumber" class="select-map-number">
+							<option selected="selected" value="0">0</option>
+							<option value="1">1</option>
+							<option value="2">2</option>
+							<option value="3">3</option>
+							<option value="4">4</option>
+							<option value="5">5</option>
+							<option value="6">6</option>
+							<option value="7">7</option>
+							<option value="8">8</option>
+							<option value="9">9</option>
+							<option value="10">10</option>
+						</select>						
+						<h1>Generate & Download<br>Map images + Script</h1>
+						<input type="submit" class="submit-go-button" value="GO!"><br>
+						<i>Download will start automaticly after generating the maps</i>
+						<br>
 					</td>
 				</tr>				
 
@@ -272,122 +499,5 @@
 				<img alt="" border="0" src="https://www.paypal.com/en_NL/i/scr/pixel.gif" width="1" height="1" />
 			</form>
 			</center>
-
-
-
-			<script type="text/javascript">
-			
-			var map;
-			var latitude = 52.732541; 
-			var longitude = 5.275353; 		
-			
-			function initMap() {                            
-
-				
-				var myLatLng = {lat: latitude, lng: longitude};
-				var mapOptions = {};
-				
-				map = new google.maps.Map(document.getElementById('map'), {
-					center: myLatLng,
-					zoom: 14,
-					mapTypeId: 'satellite',
-					disableDoubleClickZoom: true, // disable the default map zoom on double click
-					//disableDefaultUI: true,
-				    zoomControl: true,
-					scrollwheel: true,
-					mapTypeControl: false,
-					scaleControl: true,
-					streetViewControl: false,
-					rotateControl: false,
-					fullscreenControl: true,
-				});
-				
-				// Update lat/long value of div when anywhere in the map is clicked    
-				google.maps.event.addListener(map,'click',function(event) {                
-					document.getElementById("id_lat").value = event.latLng.lat().toFixed(6);
-					document.getElementById("id_long").value = event.latLng.lng().toFixed(6);
-					 var center = new google.maps.LatLng(event.latLng.lat(), event.latLng.lng());
-					 map.panTo(center);
-				});
-				
-				// Update lat/long value of div when you move the mouse over the map
-				google.maps.event.addListener(map,'mousemove',function(event) {
-					document.getElementById('latmoved').innerHTML = event.latLng.lat().toFixed(6);
-					document.getElementById('longmoved').innerHTML = event.latLng.lng().toFixed(6);
-				});
-				
-				google.maps.event.addListener(map,'center_changed',function(event) {
-					var c = map.getCenter();
-					document.getElementById("id_lat").value = c.lat().toFixed(6);
-					document.getElementById("id_long").value = c.lng().toFixed(6);
-				});
-				
-				google.maps.event.addListener(map, 'zoom_changed', function() {
-					//var z = map.getZoom();
-					document.getElementById('id_zoom').innerHTML = map.getZoom();
-					//console.log(z);
-				});
-				
-					
-				
-			/*			
-				var marker = new google.maps.Marker({
-				  position: myLatLng,
-				  map: map,
-				  //title: 'Hello World'
-				  
-				  // setting latitude & longitude as title of the marker
-				  // title is shown when you hover over the marker
-				  title: latitude + ', ' + longitude 
-				});    
-				
-				// Update lat/long value of div when the marker is clicked
-				marker.addListener('click', function(event) {              
-				  document.getElementById('latclicked').innerHTML = event.latLng.lat();
-				  document.getElementById('longclicked').innerHTML =  event.latLng.lng();
-				});
-				
-				// Create new marker on double click event on the map
-				google.maps.event.addListener(map,'dblclick',function(event) {
-					var marker = new google.maps.Marker({
-					  position: event.latLng, 
-					  map: map, 
-					  title: event.latLng.lat()+', '+event.latLng.lng()
-					});
-					
-					// Update lat/long value of div when the marker is clicked
-					marker.addListener('click', function() {
-					  document.getElementById('latclicked').innerHTML = event.latLng.lat();
-					  document.getElementById('longclicked').innerHTML =  event.latLng.lng();
-					});            
-				});
-				
-				// Create new marker on single click event on the map
-				/*google.maps.event.addListener(map,'click',function(event) {
-					var marker = new google.maps.Marker({
-					  position: event.latLng, 
-					  map: map, 
-					  title: event.latLng.lat()+', '+event.latLng.lng()
-					});                
-				});
-				
-*/
-			}
-			
-			function UpdateMap() {
-				var center = new google.maps.LatLng(document.getElementById("id_lat").value, document.getElementById("id_long").value);
-				map.panTo(center);
-			}
-			
-			function ResetAll() {
-				document.getElementById("frm1").reset();
-				var center = new google.maps.LatLng(latitude, longitude);
-				map.panTo(center);			  
-			}			
-			</script>
-			<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB7CEF_GrN1ltrpDYr_zdYqtWBkIDPuDFk&callback=initMap" async defer></script>
-
-
-		
 	</body>
 </html>

@@ -4,6 +4,10 @@
 
 ------------------------------------------------------------------
 
-Change the API key in process.php to your own API Key for your website.
+Generates Map images for the OpenTX GPS Map widget
 
-https://developers.google.com/maps/documentation/embed/get-api-key
+https://hobby4life.nl/mapgen/
+
+Change the API key in index.html & process.php to your own API Key for your website.
+
+https://docs.microsoft.com/en-us/bingmaps/getting-started/bing-maps-dev-center-help/getting-a-bing-maps-key
